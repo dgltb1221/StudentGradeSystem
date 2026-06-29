@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student.name }} 的成绩{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ student.name }} 的成绩</h1>
+    <div>
+        <a href="{{ url_for('add_score', student_id=student.id) }}" class="btn btn-success btn-sm">录入成绩</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">返回列表</a>
+        <form action="{{ url_for('delete_student', student_id=student.id) }}" method="POST" style="display: inline-block;">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定要删除该学生及其所有成绩吗？')">删除学生</button>
+        </form>
+    </div>
+</div>
+
+<p><strong>班级：</strong>{{ student.class_name or '未设置' }}</p>
+
+{% if scores %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>科目</th>
+                    <th>分数</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                <tr>
+                    <td>{{ score.subject }}</td>
+                    <td>{{ score.value }}</td>
+                    <td>
+                        <span class="text-muted">
+                            <td>
+                                <a href="{{ url_for('edit_score', score_id=score.id) }}" class="btn btn-sm btn-warning">修改</a>
+                                <form action="{{ url_for('delete_score', score_id=score.id) }}" method="POST" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定删除成绩？')">删除</button>
+                                </form>
+                            </td>
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot class="table-light">
+                <tr>
+                    <th>总计</th>
+                    <td colspan="2"><strong>{{ total }}</strong></td>
+                </tr>
+                <tr>
+                    <th>平均分</th>
+                    <td colspan="2"><strong>{{ "%.2f"|format(average) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        该学生还没有任何成绩，点击 <a href="{{ url_for('add_score', student_id=student.id) }}" class="alert-link">录入成绩</a> 添加。
+    </div>
+{% endif %}
+{% endblock %}

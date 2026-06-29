@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}修改成绩{% endblock %}
+
+{% block content %}
+<h1>修改成绩</h1>
+<p><strong>学生：</strong>{{ student.name }}</p>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="subject" class="form-label">科目 <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="subject" name="subject" value="{{ score.subject }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="value" class="form-label">分数 <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="value" name="value" value="{{ score.value }}" step="0.1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">保存修改</button>
+    <a href="{{ url_for('student_detail', student_id=student.id) }}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

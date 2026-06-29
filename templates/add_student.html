@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}添加学生{% endblock %}
+
+{% block content %}
+<h1>添加学生</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="name" class="form-label">姓名 <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="请输入学生姓名" value="{{ request.form.get('name', '') }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="class_name" class="form-label">班级</label>
+        <input type="text" class="form-control" id="class_name" name="class_name" placeholder="例如：三年级一班" value="{{ request.form.get('class_name', '') }}">
+    </div>
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">返回</a>
+</form>
+{% endblock %}
