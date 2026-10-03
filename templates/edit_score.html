@@ -20,7 +20,7 @@
                 <div class="mb-4">
                     <label for="value" class="form-label">分数 <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="value" name="value"
-                           step="0.1" value="{{ request.form.get('value', score.value) }}" required>
+                           step="0.1" value="{{ request.form.get('value', score.value|number) }}" required>
                 </div>
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary px-4">保存修改</button>
