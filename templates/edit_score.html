@@ -3,19 +3,31 @@
 {% block title %}修改成绩{% endblock %}
 
 {% block content %}
-<h1>修改成绩</h1>
-<p><strong>学生：</strong>{{ student.name }}</p>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="page-card p-4">
+            <h1 class="page-title">修改成绩</h1>
+            <p class="page-subtitle mb-4">
+                {{ student.name }} · 班级：{{ student.class_name or '未设置' }}
+            </p>
 
-<form method="post">
-    <div class="mb-3">
-        <label for="subject" class="form-label">科目 <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="subject" name="subject" value="{{ score.subject }}" required>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="subject" class="form-label">科目 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="subject" name="subject" maxlength="30"
+                           value="{{ request.form.get('subject', score.subject) }}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="value" class="form-label">分数 <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="value" name="value"
+                           step="0.1" value="{{ request.form.get('value', score.value|number) }}" required>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4">保存修改</button>
+                    <a href="{{ url_for('student_detail', student_id=student.id) }}" class="btn btn-outline-secondary px-4">取消</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="value" class="form-label">分数 <span class="text-danger">*</span></label>
-        <input type="number" class="form-control" id="value" name="value" value="{{ score.value }}" step="0.1" required>
-    </div>
-    <button type="submit" class="btn btn-primary">保存修改</button>
-    <a href="{{ url_for('student_detail', student_id=student.id) }}" class="btn btn-secondary">取消</a>
-</form>
+</div>
 {% endblock %}

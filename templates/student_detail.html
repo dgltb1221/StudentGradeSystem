@@ -3,62 +3,80 @@
 {% block title %}{{ student.name }} 的成绩{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>{{ student.name }} 的成绩</h1>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
     <div>
-        <a href="{{ url_for('add_score', student_id=student.id) }}" class="btn btn-success btn-sm">录入成绩</a>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">返回列表</a>
-        <form action="{{ url_for('delete_student', student_id=student.id) }}" method="POST" style="display: inline-block;">
-            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定要删除该学生及其所有成绩吗？')">删除学生</button>
+        <h1 class="page-title">{{ student.name }} 的成绩</h1>
+        <p class="page-subtitle">班级：{{ student.class_name or '未设置' }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{{ url_for('add_score', student_id=student.id) }}" class="btn btn-primary btn-sm px-3">+ 录入成绩</a>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm px-3">返回列表</a>
+        <form action="{{ url_for('delete_student', student_id=student.id) }}" method="post"
+              onsubmit="return confirm('确定要删除该学生及其所有成绩吗？');">
+            <button type="submit" class="btn btn-outline-danger btn-sm px-3">删除学生</button>
         </form>
     </div>
 </div>
 
-<p><strong>班级：</strong>{{ student.class_name or '未设置' }}</p>
-
 {% if scores %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>科目</th>
-                    <th>分数</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for score in scores %}
-                <tr>
-                    <td>{{ score.subject }}</td>
-                    <td>{{ score.value }}</td>
-                    <td>
-                        <span class="text-muted">
-                            <td>
-                                <a href="{{ url_for('edit_score', score_id=score.id) }}" class="btn btn-sm btn-warning">修改</a>
-                                <form action="{{ url_for('delete_score', score_id=score.id) }}" method="POST" style="display: inline-block;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定删除成绩？')">删除</button>
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-4">
+            <div class="page-card stat-card h-100 p-3">
+                <div class="stat-label">科目数</div>
+                <div class="stat-value">{{ scores|length }}</div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="page-card stat-card h-100 p-3">
+                <div class="stat-label">总分</div>
+                <div class="stat-value">{{ total|number }}</div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="page-card stat-card h-100 p-3">
+                <div class="stat-label">平均分</div>
+                <div class="stat-value">{{ "%.2f"|format(average) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-card p-3 p-md-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">科目</th>
+                        <th scope="col" class="text-center">分数</th>
+                        <th scope="col" class="text-end">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="fw-semibold">{{ score.subject }}</td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill text-bg-light border fw-normal">{{ score.value|number }}</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex flex-wrap justify-content-end gap-1">
+                                <a href="{{ url_for('edit_score', score_id=score.id) }}" class="btn btn-sm btn-outline-warning">修改</a>
+                                <form action="{{ url_for('delete_score', score_id=score.id) }}" method="post"
+                                      onsubmit="return confirm('确定删除该成绩吗？');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
                                 </form>
-                            </td>
-                        </span>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot class="table-light">
-                <tr>
-                    <th>总计</th>
-                    <td colspan="2"><strong>{{ total }}</strong></td>
-                </tr>
-                <tr>
-                    <th>平均分</th>
-                    <td colspan="2"><strong>{{ "%.2f"|format(average) }}</strong></td>
-                </tr>
-            </tfoot>
-        </table>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% else %}
-    <div class="alert alert-warning">
-        该学生还没有任何成绩，点击 <a href="{{ url_for('add_score', student_id=student.id) }}" class="alert-link">录入成绩</a> 添加。
+    <div class="page-card empty-state">
+        <div class="empty-icon">📝</div>
+        <p class="mb-3">该学生还没有任何成绩</p>
+        <a href="{{ url_for('add_score', student_id=student.id) }}" class="btn btn-primary px-3">录入第一门成绩</a>
     </div>
 {% endif %}
 {% endblock %}
