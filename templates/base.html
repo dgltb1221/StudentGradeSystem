@@ -4,30 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}学生成绩管理系统{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sgs-primary: #4f46e5;
+            --sgs-primary-dark: #4338ca;
+            --sgs-accent: #7c3aed;
+            --sgs-page-bg: #f4f6fb;
+            --sgs-radius: 1rem;
+            --sgs-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--sgs-page-bg);
+            color: #1f2937;
+        }
+
+        main { flex: 1 0 auto; }
+
+        .app-navbar {
+            background: linear-gradient(120deg, var(--sgs-primary), var(--sgs-accent));
+            box-shadow: 0 4px 18px rgba(79, 70, 229, .25);
+        }
+
+        .app-navbar .navbar-brand { font-weight: 600; letter-spacing: .02em; }
+        .app-navbar .nav-link { color: rgba(255, 255, 255, .85); }
+        .app-navbar .nav-link:hover,
+        .app-navbar .nav-link:focus { color: #fff; }
+
+        .page-card {
+            background: #fff;
+            border: 0;
+            border-radius: var(--sgs-radius);
+            box-shadow: var(--sgs-shadow);
+        }
+
+        .page-title {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: .95rem;
+            margin: .35rem 0 0;
+        }
+
+        .table > :not(caption) > * > * { padding: .85rem 1rem; }
+
+        .table thead th {
+            color: #6b7280;
+            font-size: .78rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table-hover > tbody > tr:hover > * { background-color: rgba(79, 70, 229, .05); }
+
+        .stat-card .stat-label { color: #6b7280; font-size: .85rem; }
+
+        .stat-card .stat-value {
+            color: var(--sgs-primary-dark);
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .avatar {
+            width: 2.25rem;
+            height: 2.25rem;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sgs-primary), var(--sgs-accent));
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn { border-radius: .6rem; }
+        .btn-sm { border-radius: .5rem; }
+
+        .empty-state {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+            margin-bottom: .75rem;
+        }
+
+        .app-footer {
+            flex-shrink: 0;
+            padding: 1.5rem 0;
+            color: #9ca3af;
+            font-size: .85rem;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar app-navbar" data-bs-theme="dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">学生成绩管理系统</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">🎓 学生成绩管理系统</a>
+            <ul class="navbar-nav ms-auto flex-row flex-wrap gap-3">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">学生列表</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('add_student') }}">添加学生</a></li>
+            </ul>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <main class="container py-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
                         {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="关闭"></button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="app-footer">
+        <div class="container text-center">学生成绩管理系统 · Flask + SQLAlchemy + Bootstrap 5</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
